@@ -1,0 +1,199 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Registrations" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <title>Codeplant Users</title>
+  </head>
+  <body>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <div class="container" style="padding: 50px">
+      <div class="form-group row">
+        <h1>
+          Add New User
+        </h1>
+        <div class="col-12">
+          <input
+            id="name"
+            name="name"
+            placeholder="name"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-12">
+          <input
+            id="age"
+            name="age"
+            placeholder="age"
+            type="number"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-12">
+          <input
+            id="email"
+            name="email"
+            placeholder="Email"
+            type="email"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-12">
+          <input
+            id="password"
+            name="password"
+            placeholder="password"
+            type="password"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-12">
+          <button
+            name="submit"
+            id="userform"
+            type="submit"
+            style="width: 100%"
+            class="btn btn-primary"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="padding: 50px">
+      <div class="form-group row">
+        <h4>
+          Give User Badge
+        </h4>
+        <div class="col-12">
+          <input
+            id="nameforbadge"
+            name="nameforbadge"
+            placeholder="name"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-12">
+          <input
+            id="badgename"
+            name="badgename"
+            placeholder="badge name"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-12">
+          <input
+            id="passwordbadge"
+            name="passwordbadge"
+            placeholder="password"
+            type="password"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-12">
+          <button
+            name="addbadge"
+            id="addbadge"
+            type="submit"
+            style="width: 100%"
+            class="btn btn-primary"
+          >
+            Add Badge
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      id="userlist"
+      style="padding: 35px;border: 2px solid yellow;margin: 10px"
+    ></div>
+  </body>
+  <script>
+    let u;
+    fetch("/allusers").then(result => {
+      result.json().then(users => {
+        users.forEach(eachOne => {
+          let t = `${eachOne.name} - ${eachOne.email}`;
+          let t2 = `${eachOne.accesskey}`;
+          let c = document.createElement("p");
+          let c2 = document.createElement("p");
+          c.innerHTML = t;
+          c2.innerHTML = t2;
+          document.getElementById("userlist").appendChild(c);
+          document.getElementById("userlist").appendChild(c2);
+        });
+      });
+    });
+    document.getElementById("userform").addEventListener("click", () => {
+      console.log("into");
+      var user = {
+        name: document.getElementById("name").value,
+        password: document.getElementById("password").value,
+        age: document.getElementById("age").value,
+        email: document.getElementById("email").value
+      };
+
+      fetch("/addUser", {
+        method: "POST",
+        body: JSON.stringify(user),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(result => {
+        console.log(result);
+      });
+    });
+
+    document.getElementById("addbadge").addEventListener("click", () => {
+      console.log("into");
+      var badge = {
+        name: document.getElementById("nameforbadge").value,
+        password: document.getElementById("passwordbadge").value,
+        badge: document.getElementById("badgename").value
+      };
+
+      fetch("/addbadgetouser", {
+        method: "POST",
+        body: JSON.stringify({ id: badge.name, badge: badge }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(result => {
+        console.log(result);
+      });
+    });
+  </script>
+</html>
