@@ -214,6 +214,6 @@ app.get("/reset", async (request,response)=>{
 });
 
 // start server
-const listener = app.listen(process.env.PORT, () => {
+const listener = app.listen(3000, () => {
   console.log("Your app is listening on port " + listener.address().port);
 });
