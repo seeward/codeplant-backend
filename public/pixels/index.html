@@ -1,0 +1,45 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Registrations">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+    <title>Christmas Pixels - 2021</title>
+<style>
+  h1 {
+    color: white
+  }
+    </style>
+  </head>
+  <body style="text-align: center;background-color: black">
+    <div id="nft-holder">
+      
+    </div>
+    <a target="_blank" id="link"href="/christmas">Click Here to See All Christmas Pixels</a>
+  </body>
+  <script>
+  
+    if (window.top != window) {
+    document.getElementById('link').style.display = 'none'
+}
+    const urlParams = new URLSearchParams(window.location.search);
+    const pixelId = urlParams.get('id');
+    console.log(pixelId)
+    getPixel(pixelId).then((result)=>{
+      document.getElementById('nft-holder').innerHTML = `<div style="text-align: center"><a target="_blank" href="https://codeplant-backend.glitch.me/christmas/"><img id="nft" src="data:image/png;base64,${result.thumb}" width="350" /></a><br /><h1>${pixelId}</h1></div>`
+    })
+    async function getPixel(id) {
+       let t = await fetch(`/getTextureThumb?name=${pixelId}`);
+      return await t.json()
+    }
+  
+  </script>
+  <script>
+
+  </script>
+</html>

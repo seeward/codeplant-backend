@@ -14,7 +14,7 @@ function getTableRow(r) {
 
   return `<tr style='width: 100%'><td><h1>${r.user}</h1></td><td><h4>${
     r.type
-  }</h4></td>${r.log.msg ? `<td>${r.log.msg}</td>` : ""}${
+  }</h4></td>${r.log ? `<td>${r.log}</td>` : ""}${
     text ? `<td>${text}</td>` : ""
   }<td>${new Date(r.createdAt).toLocaleString("en-US")}</td></tr>`;
 }

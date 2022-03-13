@@ -136,6 +136,58 @@
         </div>
       </div>
     </div>
+    
+    <div class="container" style="padding: 50px">
+      <div class="form-group row">
+        <h4>
+          Give User Coins
+        </h4>
+        <div class="col-12">
+          <input
+            id="usercoins"
+            name="usercoins"
+            placeholder="name"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-12">
+          <input
+            id="amountcoins"
+            name="amountcoins"
+            type="number"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-12">
+          <input
+            id="passwordcoins"
+            name="passwordcoins"
+            placeholder="password"
+            type="password"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-12">
+          <button
+            name="addcoins"
+            id="addcoins"
+            type="submit"
+            style="width: 100%"
+            class="btn btn-primary"
+          >
+            Add Coins
+          </button>
+        </div>
+      </div>
+    </div>
     <div
       id="userlist"
       style="padding: 35px;border: 2px solid yellow;margin: 10px"
@@ -146,7 +198,8 @@
     fetch("/allusers").then(result => {
       result.json().then(users => {
         users.forEach(eachOne => {
-          let t = `${eachOne.name} - ${eachOne.email}`;
+          let coins = `${eachOne.coins || 0}`
+          let t = `${eachOne.name} - ${eachOne.email} - coins: ${coins}`;
           let t2 = `${eachOne.accesskey}`;
           let c = document.createElement("p");
           let c2 = document.createElement("p");
@@ -192,6 +245,19 @@
           "Content-Type": "application/json"
         }
       }).then(result => {
+        console.log(result);
+      });
+    });
+    
+        document.getElementById("addcoins").addEventListener("click", () => {
+      console.log("into");
+      var coin = {
+        name: document.getElementById("usercoins").value,
+        password: document.getElementById("passwordcoins").value,
+        amount: document.getElementById("amountcoins").value
+      };
+
+      fetch(`/addcoins?id=${coin.name}&amount=${coin.amount}`).then(result => {
         console.log(result);
       });
     });

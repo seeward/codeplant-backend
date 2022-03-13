@@ -17,7 +17,7 @@ fetch("https://codeplant-backend.glitch.me/registers").then(function(
 
 function getTableRow(row) {
   searchText.push(`${row.childsname}${row.childsage}${row.parentname}${row.parentemail}${row.childsemail}${row.codinglevel}${row.timeslot}${row.machine}${row.paid_registration_fee}`)
-  return `<tr><td>${row.childsname}</td><td>${row.childsage}</td><td>${row.parentname}</td><td>${row.parentemail}</td><td>${row.childsemail}</td><td>${row.codinglevel}</td><td>${row.machine}</td><td>${row.paid_registration_fee}</td></tr>`
+  return `<tr><td>${row.option}</td><td>${row.childsname}</td><td>${row.childsage}</td><td>${row.parentname}</td><td>${row.parentsphone}</td><td>${row.parentemail}</td><td>${row.childsemail}</td><td>${row.codinglevel}</td><td>${row.machine}</td><td>${row.message}</td></tr>`
 }
 
 document.getElementById("filter").addEventListener("keyup", (e)=>{

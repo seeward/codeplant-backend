@@ -10,6 +10,8 @@ const _db7 = datastore();
 const _db8 = datastore();
 const _db9 = datastore();
 const _db10 = datastore();
+const _db11 = datastore();
+
 
 _db.init("website_db", "controllers/dbs");
 _db2.init("live_db", "controllers/dbs");
@@ -21,8 +23,120 @@ _db7.init("code_db", "controllers/dbs");
 _db8.init("log_db", "controllers/dbs");
 _db10.init("errors_db", "controllers/dbs");
 _db9.init("questions_db", "controllers/dbs");
+_db11.init("textures_db", "controllers/dbs");
 
-module.exports = {
+const C = {
+  addTexture: async texture => {
+    console.log(texture);
+    if (texture) {
+      texture._id =
+        "TEXTURE_" +
+        Math.random()
+          .toString(36)
+          .substr(2, 9);
+      texture.deleted = "false"
+      texture.createdAt = new Date();
+      let newS = await _db11.setObject(texture);
+      if (newS.error) {
+        return false;
+      }
+      return newS;
+    }
+  },
+  getTextures: async id => {
+    let textures = await _db11.getQuery({ user: id, deleted: "false" });
+
+    if (textures.error) {
+      return false;
+    }
+    
+    
+    return textures;
+  },
+  getAllTextures: async id => {
+    let textures = await _db11.getQuery({});
+
+    if (textures.error) {
+      return false;
+    }
+    
+    
+    return textures;
+  },
+  markTextureAsNFT: async id => {
+    let texture = await _db11.getQuery({ _id: id });
+    console.log(texture[0])
+    texture[0].isNFT = true
+    console.log(texture[0].isNFT)
+    await _db4.updateObject({ _id: id }, texture[0]);
+    return texture
+    
+  },
+  updateTextureName: async (name, id) => {
+    let texture = await _db11.getQuery({ _id: id });
+      console.log(texture);
+    if (texture.error) {
+      return false;
+    }
+    console.log(texture[0])
+    texture[0].name = name
+    
+    await _db4.updateObject({ _id: id}, texture[0]);
+    return texture
+    
+  },
+  getTextureThumb: async name => {
+    console.log(name)
+    let textures = await _db11.getQuery({ name: name });
+
+    if (textures.error) {
+      return false;
+    }
+    
+    console.log(textures);
+    if(textures.length > 0){
+      return {thumb: textures[0].thumb}
+    } else {
+      return {thumb: false}
+    }
+    
+  },
+  deleteTexture: async id => {
+    
+    let texture = await _db11.getQuery({ _id: id });
+
+    if (texture.error) {
+      return false;
+    }
+    texture[0].deleted = "true"
+    await _db11.updateObject({ _id: id }, texture[0]);
+    //console.log(filtered);
+    return true;
+  },
+  getCoins: async userId => {
+    let user = await C.fetchUser(userId);
+    let u = user[0];
+    if (u.coins) {
+      return u.coins;
+    } else {
+      u.coins = 0;
+    }
+    return u.coins
+  },
+  addCoins: async (userId, amount) => {
+    let u = await C.fetchUser(userId);
+     let user = u[0]
+    if (user && user.hasOwnProperty('coins')) {
+      user.coins = Number(user.coins) + Number(amount);
+    } else {
+      user.coins = amount;
+    }
+
+    await C.updateUser(u._id, user);
+
+    return u.coins;
+  },
+
   isLive: async streamId => {
     if (streamId) {
       streamId._id =
@@ -223,16 +337,16 @@ module.exports = {
     if (user.error) {
       return false;
     }
-    
+
     if (!user[0].hasOwnProperty("badges")) {
       user[0].badges = [];
     }
     console.log(user[0].badges);
-    
-    if(user[0].badges.indexOf(badge.badge) === -1){
+
+    if (user[0].badges.indexOf(badge.badge) === -1) {
       user[0].badges.push(badge.badge);
     }
-    
+
     //console.log(user[0])
 
     await _db4.updateObject({ name: id }, user[0]);
@@ -240,16 +354,16 @@ module.exports = {
     return true;
   },
   updateUser: async (id, update) => {
-    let user = await _db4.getQuery({ name: id });
-
+    let user = await _db4.getQuery({ _id: id });
+    console.log(user)
     if (user.error) {
       return false;
     }
-    let copy = user;
+    let copy = user
     Object.keys(update).forEach(eachKey => {
       copy[eachKey] = update[eachKey];
     });
-
+    console.log(copy)
     await _db4.updateObject({ _id: user._id }, copy);
 
     return true;
@@ -395,3 +509,6 @@ module.exports = {
     _db.clearDB();
   }
 };
+
+
+module.exports = C
